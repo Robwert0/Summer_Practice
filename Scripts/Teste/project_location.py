@@ -39,15 +39,16 @@ class ProjectLocation(BaseModel):
             raise ValueError('Not a Romanian County')
         return county
 
-def load_data_from_csv(csv_file: str) -> dict:
-    df = pd.read_csv(csv_file)
-    instances = {}
+def load_data_from_csv(csv_file: str) -> list[ProjectLocation]:
+    csv_data = pd.read_csv(csv_file)
+    df = pd.DataFrame(csv_data)
+    instances = []
     
     for index, row in df.iterrows():
         try:
             instance = ProjectLocation(**row.to_dict())
-            instance_key = "Locatia " + str(index)
-            instances[instance_key] = instance.model_dump()
+            instances.append(instance.model_dump())
+            
         except ValidationError as e:
             print(f"Validation error at row {index}: {e}")
     
@@ -57,6 +58,12 @@ def load_data_from_csv(csv_file: str) -> dict:
 if __name__ == "__main__":
     csv_file = "CSVs\\project_locations.csv"
     project_locations = load_data_from_csv(csv_file)
+    # print(type(project_locations))
+    # print(project_locations)
+    df = pd.DataFrame(project_locations)
+    df['project_location'] = df.apply(lambda row: {'tara': row['country'], 'Oras': row['city']}, axis=1)
     
-    for key, instance in project_locations.items():
-        print(f"{key}: {instance}")
+    print(df)
+    
+    # for idx, loc in enumerate(project_locations, start=1):
+    #     print(f"Locatia {idx}: {loc}")
