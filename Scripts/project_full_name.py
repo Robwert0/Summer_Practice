@@ -15,9 +15,10 @@ class pydantic2csv(BaseModel):
         if not (str_number.startswith('200') or str_number.startswith('100')):
             raise ValueError('number must start with 100 or 200')
         return number
+    
+    def to_string(self) -> str:
+        return f"{self.number}_{self.year.strftime('%Y')}_{self.title}"
 
-    def to_string(self) ->str:
-        return f'{self.number}_{self.year.strftime('%Y')}_{self.title}'
 
 def load_data_from_csv(csv_file: str)->list[str]:
     df = pd.read_csv(csv_file, parse_dates=['year'])
