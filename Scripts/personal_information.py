@@ -61,5 +61,5 @@ def load_data_from_csv(csv_file: str) -> list[str]:
     return instances
     
 if __name__ =="__main__":
-    csv_file = "CSVs\\personal_information.csv"
+    csv_file = "CSVs\personal_information.csv"
     personal_informations = load_data_from_csv(csv_file)
