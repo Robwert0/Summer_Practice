@@ -1,15 +1,15 @@
-from pydantic import BaseModel, ValidationError, field_validator, EmailStr
+from pydantic import BaseModel, ValidationError, field_validator, EmailStr, Field
 from pydantic_core.core_schema import FieldValidationInfo
 import pandas as pd
 from datetime import datetime
 import re
 
 class personal_information(BaseModel):
-    # employee_id: int
+    employee_id: str = Field(alias='id')
     first_name: str
     last_name: str
     email: EmailStr
-    cnp: int
+    cnp: str
     gender: str
 
     @field_validator('email')
@@ -21,21 +21,17 @@ class personal_information(BaseModel):
             raise ValueError('Email must be in the format first.last@company.com with lowercase')
         return email
     
-    
-    def job_workload(cls, value, info: FieldValidationInfo):
-        if info.data['job_role'] and value <= 50:
-            raise ValueError(f"{info.data['name']} does not have enough workload")
-    
     @field_validator('cnp')
-    def validate_identifier(cls, cnp, info:FieldValidationInfo):
-        if not re.match(r'^[1256]\d{9}$', cnp):
-            raise ValueError('Identifier must start with 1, 2, 5, or 6 and have 10 digits')
+    def validate_identifier(cls, cnp, info: FieldValidationInfo):
+        if not re.match(r'^[1256]\d{12}$', cnp):
+            raise ValueError('Identifier must start with 1, 2, 5, or 6 and have 13 digits')
 
-        gender_indicator = cnp[0]
-
-        gender_from_cnp = 'male' if gender_indicator in '15' else 'female'
-        if 'gender' in cnp and cls.gender != gender_from_cnp:
-            raise ValueError(f'Gender from CNP ({gender_from_cnp}) does not match provided gender ({info.data['gender']})')
+        if 'gender' in info.data:
+            gender_indicator = cnp[0]
+            gender_from_cnp = 'male' if gender_indicator in '15' else 'female'
+            gender = info.data['gender'].strip().lower()
+            if gender != gender_from_cnp:
+                raise ValueError(f'Gender from CNP ({gender_from_cnp}) does not match provided gender ({gender})')
 
         cnp_year = int(cnp[1:3])
         current_year = datetime.now().year
@@ -45,13 +41,13 @@ class personal_information(BaseModel):
             birth_year = 2000 + cnp_year
 
         if birth_year > current_year:
-             raise ValueError(f'Extracted year from CNP ({birth_year}) cannot be greater than the current year ({current_year})')
+            raise ValueError(f'Extracted year from CNP ({birth_year}) cannot be greater than the current year ({current_year})')
 
         return cnp
         
 
 def load_data_from_csv(csv_file: str) -> list[str]:
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, dtype={'cnp':str})
     instances = []
 
     for _, row in df.iterrows():
