@@ -1,4 +1,7 @@
-from pydantic import BaseModel, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, field_validator, Field
+from typing import Optional, Union
+import typing
+import math
 import pandas as pd
 
 # List of European countries
@@ -23,8 +26,10 @@ class ProjectLocation(BaseModel):
     country: str
     county: str
     city: str
-    street: str 
-    number: int
+    street: str  | None
+    number: Optional[float] = None
+    # number: Union[int, None]
+    # number: int | None
     postalcode: int
     
     @field_validator('country')
@@ -32,12 +37,6 @@ class ProjectLocation(BaseModel):
         if country not in european_countries:
             raise ValueError('Not a European Country')
         return country
-    
-    @field_validator('county')
-    def check_county(cls, county):
-        if county not in romanian_counties:
-            raise ValueError('Not a Romanian County')
-        return county
 
 def load_data_from_csv(csv_file: str) -> dict:
     df = pd.read_csv(csv_file)
@@ -46,7 +45,7 @@ def load_data_from_csv(csv_file: str) -> dict:
     for index, row in df.iterrows():
         try:
             instance = ProjectLocation(**row.to_dict())
-            instance_key = "Locatia " + str(index)
+            instance_key = "Locatia " + str(index+1)
             instances[instance_key] = instance.model_dump()
         except ValidationError as e:
             print(f"Validation error at row {index}: {e}")
