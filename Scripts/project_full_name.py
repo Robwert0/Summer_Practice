@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
 from datetime import datetime
 import pandas as pd
 
@@ -23,9 +23,13 @@ class pydantic2csv(BaseModel):
 def load_data_from_csv(csv_file: str)->list[str]:
     df = pd.read_csv(csv_file, parse_dates=['year'])
     result = []
-    for _, row in df.iterrows():
-        instance = pydantic2csv(number=row['number'], year=row['year'], title=row['title'])
-        result.append(instance.to_string())
+    for index, row in df.iterrows():
+        try:
+            row = row.where(pd.notnull(row), None)
+            instance = pydantic2csv(**row.to_dict())
+            result.append(instance.to_string())
+        except ValidationError as e:
+            print(f"Validation error at row {index}: {e}")
 
     return result
 

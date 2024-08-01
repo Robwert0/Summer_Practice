@@ -3,12 +3,13 @@ from pydantic_core.core_schema import FieldValidationInfo
 import pandas as pd
 from datetime import datetime
 import re
+from typing import Optional
 
 class personal_information(BaseModel):
     employee_id: str = Field(alias='id')
     first_name: str
     last_name: str
-    email: EmailStr
+    email: Optional[EmailStr] = None
     cnp: str
     gender: str
 
@@ -52,6 +53,7 @@ def load_data_from_csv(csv_file: str) -> list[str]:
 
     for _, row in df.iterrows():
         try:
+            row = row.where(pd.notnull(row), None)
             instance = personal_information(**row.to_dict())
             print(instance)
             instances.append(instance)
