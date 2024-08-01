@@ -2,18 +2,73 @@ colum_config = {
     "practica_bp":{
         "full_name": {
             "db_data_type": "VARCHAR", 
-            "db_is_null": True, 
+            "db_is_null": False, 
             "table_name":"project"
         }, 
         "location": {
             "db_data_type": "jsonb", 
             "db_is_null": False, 
             "table_name": "project"
-        }, 
-        "location_test": {
-            "db_data_type": "numeric", 
+        },
+
+        "employee_ID":{
+            "first_name":{
+            "db_data_type": "VARCHAR",
+            "db_is_null": False, 
+            "table_name":"personal_information"
+            },
+            "last_name":{
+                "db_data_type": "VARCHAR",
+                "db_is_null": False, 
+                "table_name":"personal_information"
+            },
+            "email":{
+                "db_data_type": "VARCHAR",
+                "db_is_null": True, 
+                "table_name":"personal_information"
+            },
+            "cnp":{
+                "db_data_type": "integer",
+                "db_is_null": False, 
+                "table_name":"personal_information"
+            },
+            "gender":{
+                "db_data_type": "VARCHAR",
+                "db_is_null": False, 
+                "table_name":"personal_information"
+            },
+        },
+
+        "name_1":{
+            "db_data_type": "VARCHAR",
+            "db_is_null": False, 
+            "table_name":"spoken_language"
+        },
+        "name_2":{
+            "db_data_type": "VARCHAR",
             "db_is_null": True, 
-            "table_name": "project_test"
+            "table_name":"spoken_language"
+        },
+        "name_3":{
+            "db_data_type": "VARCHAR",
+            "db_is_null": True, 
+            "table_name":"spoken_language"
+        },
+
+        "programming_language1":{
+            "db_data_type": "VARCHAR",
+            "db_is_null": True, 
+            "table_name":"digital_sklill"
+        },
+        "programming_language2":{
+            "db_data_type": "VARCHAR",
+            "db_is_null": True, 
+            "table_name":"digital_sklill"
+        },
+        "programming_language3":{
+            "db_data_type": "VARCHAR",
+            "db_is_null": True, 
+            "table_name":"digital_sklill"
         }
     }
 }
