@@ -12,6 +12,7 @@ colum_config = {
         },
 
         "employee_ID":{
+            #id 
             "first_name":{
             "db_data_type": "VARCHAR",
             "db_is_null": False, 

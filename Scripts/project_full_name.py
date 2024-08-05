@@ -2,6 +2,7 @@ from pydantic import BaseModel, ValidationError, field_validator
 from datetime import datetime
 import pandas as pd
 
+
 class pydantic2csv(BaseModel):
     number: int
     year: datetime 
