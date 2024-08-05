@@ -147,19 +147,19 @@ if __name__ =="__main__":
     csv_file = "CSVs\\all_in.csv"
     validated_data = load_data_from_csv(csv_file)
 
-    
-    file_name = 'validated_data.csv'
+    data_dir = 'CSVs'
+    validated_csv_file = os.path.join(data_dir, "validated_data.csv")
     headers = [field for field in final_project.__annotations__.keys()]
 
-    if not os.path.isfile(file_name):
-        with open(file_name, mode='w', newline='') as file:
+    if not os.path.isfile(validated_csv_file):
+        with open(validated_csv_file, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(headers)
-            print(f'{file_name} created with headers.')
+            print(f'{validated_csv_file} created with headers.')
 
-    existing_entries = read_existing_entries(file_name)
+    existing_entries = read_existing_entries(validated_csv_file)
 
-    with open(file_name, mode='a', newline='') as file:
+    with open(validated_csv_file, mode='a', newline='') as file:
         writer = csv.writer(file)
         
         for key, instance in validated_data.items():
