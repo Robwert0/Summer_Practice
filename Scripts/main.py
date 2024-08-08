@@ -25,7 +25,7 @@ class final_project(BaseModel):
     county: str
     city: str
     street: Optional[str] = None
-    number: Optional[int] = None
+    st_number: Optional[int] = None
     postalcode: int
     mother_language: str
     language_2: Optional[str] = None
@@ -146,6 +146,7 @@ def read_existing_entries(file_name: str) -> set:
 if __name__ =="__main__":
     csv_file = "CSVs\\all_in.csv"
     validated_data = load_data_from_csv(csv_file)
+    print(validated_data)
 
     data_dir = 'CSVs'
     validated_csv_file = os.path.join(data_dir, "validated_data.csv")
