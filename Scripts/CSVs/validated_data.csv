@@ -1,2 +1,2 @@
-employee_id,first_name,last_name,email,cnp,gender,number,year,title,language1,language2,language3,country,county,city,street,st_number,postalcode,mother_language,language_2,language_3
-BP_0538,ana,Karenina,ana.karenina@company.com,2620918233374,female,200101,2024,SP-DataValidation,Python,Java,C++,Romania,Brasov,Brasov,starda 1,,500295,English,Romanian,German
+employee_id,first_name,last_name,email,cnp,gender,number,year,title,language1,language2,language3,country,county,city,street,st_number,postalcode,mother_language,language_2,language_3,full_name,location
+BP_0538,ana,Karenina,ana.karenina@company.com,2620918233374,female,200101,2024,SP-DataValidation,Python,Java,C++,Romania,Brasov,Brasov,starda 1,NULL,500295,English,Romanian,German,200101_2024_SP-DataValidation,"{""country"": ""Romania"", ""county"": ""Brasov"", ""city"": ""Brasov"", ""street"": ""starda 1"", ""st_number"": null, ""postalcode"": 500295}"

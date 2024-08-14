@@ -4,7 +4,9 @@ import pandas as pd
 from datetime import datetime
 import re
 from typing import Optional
+import json  # Import json for serialization
 from ref_table import european_languages, europe, counties, programming_languages
+
 import os
 import csv
 
@@ -112,9 +114,23 @@ class final_project(BaseModel):
     @field_validator('year')
     def modelate_year(cls, year):
         return year.strftime('%Y')
-    
+
     def to_string(self) -> str:
-        return f"{self.number}_{self.year.strftime('%Y')}_{self.title}"
+        return f"{self.number}_{self.year}_{self.title}"
+    
+    @property
+    def location(self) -> dict:
+        return {
+            'country': self.country,
+            'county': self.county,
+            'city': self.city,
+            'street': self.street,
+            'st_number': self.st_number,
+            'postalcode': self.postalcode
+        }
+    
+    def location_json(self) -> str:
+        return json.dumps(self.location)
 
 def load_data_from_csv(csv_file: str) -> dict:
     df = pd.read_csv(csv_file, dtype={'cnp':str}, parse_dates=['year'])
@@ -150,8 +166,9 @@ if __name__ =="__main__":
 
     data_dir = 'CSVs'
     validated_csv_file = os.path.join(data_dir, "validated_data.csv")
-    headers = [field for field in final_project.__annotations__.keys()]
-
+    
+    # Include all original fields plus 'location'
+    headers = [field for field in final_project.__annotations__.keys()] + ['full_name'] + ['location']
     if not os.path.isfile(validated_csv_file):
         with open(validated_csv_file, mode='w', newline='') as file:
             writer = csv.writer(file)
@@ -171,9 +188,17 @@ if __name__ =="__main__":
             if employee_id in existing_entries:
                 print(f"Skipping duplicate entry for employee_id: {employee_id}")
                 continue
-            
+
+            # Prepare the row with all original fields and location JSON
+            row = [
+                'NULL' if data.get(header) is None else data.get(header)
+                for header in headers[:-2]
+            ]
+            row.append(instance.to_string())
+            row.append(instance.location_json())
+
             # Write row to CSV
-            writer.writerow([data.get(header, '') for header in headers])
+            writer.writerow(row)
             print(f'Data for {key} added to the CSV file.')
 
             existing_entries.add(employee_id)
