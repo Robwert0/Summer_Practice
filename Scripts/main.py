@@ -4,7 +4,7 @@ import pandas as pd
 from datetime import datetime
 import re
 from typing import Optional
-import json  # Import json for serialization
+import json
 from ref_table import european_languages, europe, counties, programming_languages
 
 import os
@@ -16,7 +16,7 @@ class final_project(BaseModel):
     last_name: str
     email: Optional[EmailStr] = None
     cnp: str
-    gender: str
+    gender: str 
     number: int
     year: datetime 
     title: str
@@ -167,7 +167,6 @@ if __name__ =="__main__":
     data_dir = 'CSVs'
     validated_csv_file = os.path.join(data_dir, "validated_data.csv")
     
-    # Include all original fields plus 'location'
     headers = [field for field in final_project.__annotations__.keys()] + ['full_name'] + ['location']
     if not os.path.isfile(validated_csv_file):
         with open(validated_csv_file, mode='w', newline='') as file:
